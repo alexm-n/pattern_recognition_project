@@ -1,34 +1,35 @@
 import os
-from knn import load_vector, knn_classify
+import copy
+from knn import knn_classify
+import all_vectors as alldata
 
-def leave_one_out(folderpath, k):
-    files = os.listdir(folderpath)
-    files.sort()
-    database = []
-    for filename in files:
-        vec = load_vector(os.path.join(folderpath, filename))
-        classe = int(filename[1:3])
-        database.append((filename, vec, classe))
-    predictions = []
+def knn_leave_one_out(method, k):
     true_labels = []
     pred_labels = []
-    confusion = {}
-    for test_filename, test_vec, true_classe in database:
-        train_db = [(vec, classe) for (fn, vec, classe) in database if fn != test_filename]
+    for (test_classe, test_ech) in alldata.approche[method]:
+        test_vec = alldata.approche[method][(test_classe, test_ech)]
+        train_db = copy.deepcopy(alldata.approche[method])
+        train_db.pop((test_classe, test_ech))
         pred_classe = knn_classify(train_db, test_vec, k)
-        true_labels.append(true_classe)
+        true_labels.append(test_classe)
         pred_labels.append(pred_classe)
-        confusion[(true_classe, pred_classe)] = confusion.get((true_classe, pred_classe), 0) + 1
-    accuracy = sum(t == p for t, p in zip(true_labels, pred_labels)) / len(true_labels)
-    return accuracy, confusion, true_labels, pred_labels
+    return true_labels, pred_labels
+
+def metriques(true_labels, pred_labels):
+    tp = {}
+    fp = {}
+    fn = {}
+    for (true_classe, pred_classe) in zip(true_labels, pred_labels):
+        tp[true_classe] = tp.get(true_classe, 0) + (true_classe == pred_classe)
+        fp[true_classe] = fp.get(true_classe, 0) + (true_classe != pred_classe)
+        fn[pred_classe] = fn.get(pred_classe, 0) + (true_classe != pred_classe)
+    return tp, fp, fn
+
 
 if __name__ == "__main__":
-    folderpath = "./data/F0/"
-    k = 5
-    a, c, t, p = leave_one_out(folderpath, k)
-    print(a)
-    print(c)
-    print(t)
-    print(p)
-
+    true_labels, pred_labels = knn_leave_one_out("E34", 5)
+    tp, fp, fn = metriques(true_labels, pred_labels)
+    print("tp", tp)
+    print("fp", fp)
+    print("fn", fn)    
 

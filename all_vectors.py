@@ -1,12 +1,13 @@
 import os
 
 doss = 'C:/Users/user/OneDrive/Bureau/AnUniv/m1-p/reconnaissance formes/proj'
+doss2 = "/home/alex/Documents/projet_rf/projet/"
 approche={}
 x=[]
 
-for dossier in os.listdir(doss):
+for dossier in os.listdir(doss2):
     if dossier in ["F0","E34","F2","GFD","SA"]:
-        for fichier in os.listdir(os.path.join(doss,dossier)):
+        for fichier in os.listdir(os.path.join(doss2,dossier)):
             c,e=fichier.capitalize().split('n')
             _,cls = c.split('S')
             ech, _ = e.split('.')
@@ -14,7 +15,7 @@ for dossier in os.listdir(doss):
             if dossier not in approche:
                 approche[dossier] = {}
             x=[]
-            fichier_path = os.path.join(doss,dossier,fichier)
+            fichier_path = os.path.join(doss2,dossier,fichier)
 
             if os.path.exists(fichier_path):
                 with open(fichier_path,"r",encoding="utf-8") as f:
@@ -23,4 +24,3 @@ for dossier in os.listdir(doss):
 
             approche[dossier][int(cls),int(ech)] = x
 
-print(approche["F0"][1,1])

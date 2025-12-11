@@ -2,15 +2,15 @@ import numpy as np
 from matplotlib import pyplot as plt
 import all_vectors
 import k_means_v2 as kmean
-import knn
+import knn_vf as knn
 import vote_maj
 
 
 def labels_to_tp(true_labels, pred_labels):
-    tp = {c: 0 for c in range(1, 10)}
-    fp = {(p, t): 0 for p in range(1, 10) for t in range(1, 10)}
-    fn = {(t, p): 0 for t in range(1, 10) for p in range(1, 10)}
-    for x in range(1, 10):
+    tp = {c: 0 for c in range(1, C)}
+    fp = {(p, t): 0 for p in range(1, C) for t in range(1, C)}
+    fn = {(t, p): 0 for t in range(1, C) for p in range(1, C)}
+    for x in range(1, C):
         for y in range(1, 12):
             if true_labels[x, y] == pred_labels[x, y]:
                 tp[true_labels[x, y]] += 1
@@ -28,7 +28,7 @@ def rappel(tp, fn):
     print(fn)
     for k in tp:
         fn_k = 0
-        for d in range(1, 10):
+        for d in range(1, C):
             if k != d:
                 fn_k += fn[k, d]
         if fn_k + tp[k] == 0:
@@ -45,7 +45,7 @@ def precision(tp, fp):
     r_glob = 0
     for k in tp:
         fp_k = 0
-        for d in range(1, 10):
+        for d in range(1, C):
             if k != d:
                 fp_k += fp[k, d]
         if fp_k + tp[k] == 0:
@@ -62,11 +62,11 @@ def fscore(rap, prec, beta):
 
 
 def conf_mat(tp, fp, fn):
-    matrice = [[0 for i in range(9)] for i in range(9)]
-    for i in range(1, 10):
+    matrice = [[0 for i in range(C-1)] for i in range(C-1)]
+    for i in range(1, C):
         matrice[i - 1][i - 1] = tp[i]
-        for x in range(i + 1, 10):
-            matrice[x - 1][i - 1] = fp[x, i]
+        for x in range(i + 1, C):
+            matrice[x - 1][i - 1] = fp[i,x]
             matrice[i - 1][x - 1] = fn[i, x]
     return matrice
 
@@ -75,8 +75,8 @@ def dessin_mat(mat):
     plt.imshow(mat, cmap="Blues")
     plt.colorbar()
     # Ajouter les valeurs dans les cases
-    for x in range(9):
-        for y in range(9):
+    for x in range(C-1):
+        for y in range(C-1):
             plt.text(y, x, mat[x][y], ha='center', va='center', color='black')
 
     plt.xlabel("Estimation")
@@ -87,11 +87,11 @@ def dessin_mat(mat):
 
 
 def prerap_curve(true_labels_dict, pred_labels_dict, k):
-    for cls in range(1, 10):
+    for cls in range(1, C):
         pre_tot = []
         rap_tot = []
         n = 0
-        x = np.arange(0, 1, 0.1)
+        x = np.arange(0, 1.1, 0.1)
         for y in range(1, k + 1):
             if true_labels_dict[cls, y] == pred_labels_dict[cls, y]:
                 n += 1
@@ -100,9 +100,10 @@ def prerap_curve(true_labels_dict, pred_labels_dict, k):
 
         plt.plot(x, pre_tot, marker='o', label='precision')
         plt.plot(x, rap_tot, marker='o', label='rappel')
-        plt.title(f"per/rap courbe de classe {cls}")
-        plt.legend()
+        plt.plot(rap_tot, pre_tot, marker='o',label='prec_rap courbe')
+        plt.title(f"prec/rap courbe de classe {cls}")
         plt.grid(True)
+        plt.legend()
         plt.show()
 
 
@@ -134,7 +135,7 @@ print("evaluation")
 #         prerap_curve(true_labels,pred_labels,k=10)
 #         print(f"rappel {rapp}, precision {prcc}, F1-score {fs}")
 
-# #Vote Majoritaire
+#Vote Majoritaire
 # true_labels, pred_labels = vote_maj.vm_leave_one_out(4, C)
 # tp, fp, fn = labels_to_tp(true_labels,pred_labels)
 # tab_rap , rapp = rappel(tp,fn)

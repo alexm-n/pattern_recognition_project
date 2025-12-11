@@ -29,6 +29,11 @@ def vm_leave_one_out(k):
             pred_class = []
             prob_class = []
             for method in all_vectors.approche:
+                # Supprimer toutes les classe > 5   pour qst 4.2
+               # for x, y in list(alldata.approche[method].keys()):
+               #   if x >= 6:
+               #     del alldata.approche[method][x, y]
+                
                 test_vec = all_vectors.approche[method][(test_classe, test_ech)]
                 train_db = copy.deepcopy(all_vectors.approche[method])
                 train_db.pop((test_classe, test_ech))

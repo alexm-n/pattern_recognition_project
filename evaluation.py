@@ -87,24 +87,33 @@ def dessin_mat(mat):
 
 
 def prerap_curve(true_labels_dict, pred_labels_dict, k):
+    max_row = 5
+    n_rows = math.ceil(C / max_row)
+    n_cols = min(C, max_row)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(4 * n_cols, 4 * n_rows))
+    axes = axes.flatten()
+
     for cls in range(1, C):
         pre_tot = []
         rap_tot = []
         n = 0
-        x = np.arange(0, 1.1, 0.1)
+        x = np.arange(0, 1, 0.1)
         for y in range(1, k + 1):
             if true_labels_dict[cls, y] == pred_labels_dict[cls, y]:
                 n += 1
             pre_tot.append(n / y)
             rap_tot.append(n / 11)
 
-        plt.plot(x, pre_tot, marker='o', label='precision')
-        plt.plot(x, rap_tot, marker='o', label='rappel')
-        plt.plot(rap_tot, pre_tot, marker='o',label='prec_rap courbe')
-        plt.title(f"prec/rap courbe de classe {cls}")
-        plt.grid(True)
-        plt.legend()
-        plt.show()
+        ax = axes[cls - 1]
+        ax.plot(x, pre_tot, marker='o', label='Precision')
+        ax.plot(x, rap_tot, marker='o', label='Rappel')
+        ax.plot(rap_tot, pre_tot, marker='o', label='prec_rap courbe')
+        ax.set_title(f"Classe {cls}")
+        ax.grid(True)
+        ax.legend()
+
+    plt.tight_layout()
+    plt.show()
 
 
 C = 10  #nombre de classe 10/6
@@ -145,3 +154,4 @@ print("evaluation")
 # dessin_mat(mat)
 # prerap_curve(true_labels,pred_labels,k=10)
 # print(f"rappel {rapp}, precision {prcc}, F1-score {fs}")
+

@@ -28,7 +28,6 @@ def knn_leave_one_out(method, k):
 
   true_labels = {}
   pred_labels = {}
-  proba_labels = {}
   for (test_classe, test_ech) in alldata.approche[method]:
     test_vec = alldata.approche[method][(test_classe, test_ech)]
     train_db = copy.deepcopy(alldata.approche[method])
@@ -38,5 +37,4 @@ def knn_leave_one_out(method, k):
 
     true_labels[test_classe,test_ech] = test_classe
     pred_labels[test_classe,test_ech] = pred_classe
-    proba_labels[test_classe,test_ech] = [count.get(c, 0) / k for c in range(1, 10)]
-  return true_labels, pred_labels, proba_labels
+  return true_labels, pred_labels

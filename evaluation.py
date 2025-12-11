@@ -128,7 +128,8 @@ print("evaluation")
 #     fs = fscore(rapp,prcc,1)
 #     mat = conf_mat(tp, fp, fn)
 #     dessin_mat(mat)
-#     prerap_curve(true_labels,pred_labels,k=10)
+#     prerap_curve(true_labels,pred_labels,k=10)   #courbe facon cours
+#     knn.print_prc(4, mtd, nb_classes=C)   #courbe de maniere generale
 #     print(f"rappel {rapp}, precision {prcc}, F1-score {fs}")
 
 ##Kmean
@@ -154,4 +155,5 @@ print("evaluation")
 # dessin_mat(mat)
 # prerap_curve(true_labels,pred_labels,k=10)
 # print(f"rappel {rapp}, precision {prcc}, F1-score {fs}")
+
 

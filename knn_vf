@@ -21,6 +21,11 @@ def knn_classify(train_db, query_vec, k):
   return count
 
 def knn_leave_one_out(method, k):
+  # Supprimer toutes les classe > 5   pour qst 4.2
+   # for x, y in list(alldata.approche[method].keys()):
+   #   if x >= 6:
+   #     del alldata.approche[method][x, y]
+
   true_labels = {}
   pred_labels = {}
   proba_labels = {}

@@ -108,7 +108,8 @@ def prerap_curve(true_labels_dict, pred_labels_dict, k):
         ax.plot(x, pre_tot, marker='o', label='Precision')
         ax.plot(x, rap_tot, marker='o', label='Rappel')
         ax.plot(rap_tot, pre_tot, marker='o', label='prec_rap courbe')
-        ax.set_title(f"Classe {cls}")
+        auc_pr = np.trapezoid(pre_tot, rap_tot) #calculer l'AUC de la courbe precision/rappel
+        ax.set_title(f"Classe {cls}\nAUC-PR = {auc_pr:.3f}")
         ax.grid(True)
         ax.legend()  #dessine 3 courbes precision, rappel et precision/rappel
 
@@ -153,3 +154,4 @@ print("evaluation")
 # dessin_mat(mat)
 # prerap_curve(true_labels,pred_labels,k=10)
 # print(f"rappel {rapp}, precision {prcc}, F1-score {fs}")
+
